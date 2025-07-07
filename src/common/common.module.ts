@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { ConfigService } from './services'
+import { ConfigService, DatabaseService } from './services'
 
 @Module({
   imports: [
@@ -10,7 +10,7 @@ import { ConfigService } from './services'
       envFilePath: ['.env', '.env.local']
     })
   ],
-  providers: [ConfigService],
-  exports: [ConfigService]
+  providers: [ConfigService, DatabaseService],
+  exports: [ConfigService, DatabaseService]
 })
 export class CommonModule {}
