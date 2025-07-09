@@ -22,5 +22,6 @@
     "importModuleSpecifier": "relative"
   },
   "typescript.suggest.autoImports": true,
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "cSpell.words": ["hrms"]
 }

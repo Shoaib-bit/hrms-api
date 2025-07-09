@@ -16,8 +16,8 @@ async function bootstrap() {
     app.setGlobalPrefix('api')
 
     const config = new DocumentBuilder()
-      .setTitle('Tasks API')
-      .setDescription('API for managing tasks')
+      .setTitle('HRMS API')
+      .setDescription('API for managing Human Resource Management System')
       .setVersion('1.0')
       .build()
 
