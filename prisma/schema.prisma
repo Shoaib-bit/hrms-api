@@ -18,15 +18,45 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String 
+  dateOfBirth String? 
   password String
-  status Status @default(ACTIVE)
+  status Status @default(active)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   verified Boolean @default(false)
+  roleId Int
+  role   Roles @relation(fields: [roleId], references: [id])
 }
 
 enum Status {
-  ACTIVE
-  INACTIVE
+  active
+  inactive
 }
 
+model Permissions {
+  id Int @id @default(autoincrement())
+  name String
+  status Status @default(active)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rolePermissions RolePermissions[]
+}
+
+model Roles {
+  id Int @id @default(autoincrement())
+  name String
+  status Status @default(active)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users User[]
+  rolePermissions RolePermissions[]
+}
+
+model RolePermissions {
+  id Int @id @default(autoincrement())
+  roleId Int
+  permissionId Int
+  role Roles @relation(fields: [roleId], references: [id])
+  permission Permissions @relation(fields: [permissionId], references: [id])
+  @@unique([roleId, permissionId])
+}
