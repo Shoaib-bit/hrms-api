@@ -7,13 +7,31 @@ export class AuthenticationService {
 
   async createPermission(name: string) {
     try {
+      // Check if permission already exists
+      const existingPermission =
+        await this.databaseService.permissions.findFirst({
+          where: {
+            name: {
+              equals: name,
+              mode: 'insensitive'
+            }
+          }
+        })
+
+      if (existingPermission) {
+        throw new Error(`Permission with name "${name}" already exists`)
+      }
+
       const permission = await this.databaseService.permissions.create({
         data: {
-          name
+          name: name.trim()
         }
       })
       return permission
     } catch (error) {
+      if (error.message.includes('already exists')) {
+        throw error
+      }
       throw new Error(`Failed to create permission: ${error.message}`)
     }
   }

@@ -1,13 +1,43 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common'
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Patch,
+  Post
+} from '@nestjs/common'
+import { CreatePermissionDto } from '../dto'
 import { AuthenticationService } from './../authentication.service'
 
 @Controller('permission')
 export class PermissionController {
   constructor(private authenticationService: AuthenticationService) {}
+
   @Post()
-  createPermission() {
-    this.authenticationService.createPermission('new-permission')
-    return 'This action creates a new permission'
+  async createPermission(@Body() createPermissionDto: CreatePermissionDto) {
+    try {
+      const permission = await this.authenticationService.createPermission(
+        createPermissionDto.name
+      )
+      return {
+        message: 'Permission created successfully',
+        data: permission
+      }
+    } catch (error) {
+      if (error.message.includes('already exists')) {
+        throw new ConflictException(error.message)
+      }
+
+      if (error.message.includes('Failed to create permission')) {
+        throw new InternalServerErrorException(
+          'Unable to create permission. Please try again.'
+        )
+      }
+
+      throw new InternalServerErrorException('An unexpected error occurred')
+    }
   }
 
   @Get()

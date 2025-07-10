@@ -35,7 +35,7 @@ enum Status {
 
 model Permissions {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   status Status @default(active)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
