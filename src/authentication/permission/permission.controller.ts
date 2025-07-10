@@ -5,7 +5,7 @@ import {
   Delete,
   Get,
   InternalServerErrorException,
-  Patch,
+  Param,
   Post,
   Query
 } from '@nestjs/common'
@@ -52,9 +52,9 @@ export class PermissionController {
         data: permissions
       }
     } catch (error) {
-      if (error.message.includes('Failed to create permission')) {
+      if (error.message.includes('Failed to get permissions')) {
         throw new InternalServerErrorException(
-          'Unable to create permission. Please try again.'
+          'Unable to get permissions. Please try again.'
         )
       }
 
@@ -63,12 +63,41 @@ export class PermissionController {
   }
 
   @Delete(':id')
-  deletePermission() {
-    return 'This action deletes a permission'
+  async deletePermission(@Param('id') id: number) {
+    try {
+      const deletedPermission =
+        await this.authenticationService.deletePermission(id)
+      return {
+        message: 'Permission deleted successfully',
+        data: null
+      }
+    } catch (error) {
+      if (error.message.includes('Failed to delete permission')) {
+        throw new InternalServerErrorException(
+          'Unable to delete permission. Please try again.'
+        )
+      }
+
+      throw new InternalServerErrorException('An unexpected error occurred')
+    }
   }
 
-  @Patch(':id')
-  updatePermission() {
-    return 'This action updates a permission'
+  @Get(':id')
+  async getPermission(@Param('id') id: number) {
+    try {
+      const permission = await this.authenticationService.getPermission(id)
+      return {
+        message: 'Permission retrieved successfully',
+        data: permission
+      }
+    } catch (error) {
+      if (error.message.includes('Failed to get permission')) {
+        throw new InternalServerErrorException(
+          'Unable to get permission. Please try again.'
+        )
+      }
+
+      throw new InternalServerErrorException('An unexpected error occurred')
+    }
   }
 }

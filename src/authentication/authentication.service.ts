@@ -56,4 +56,29 @@ export class AuthenticationService {
       throw new Error(`Failed to get permissions: ${error.message}`)
     }
   }
+
+  async deletePermission(id: number) {
+    try {
+      const permission = await this.databaseService.permissions.delete({
+        where: { id }
+      })
+      return permission
+    } catch (error) {
+      throw new Error(`Failed to delete permission: ${error.message}`)
+    }
+  }
+
+  async getPermission(id: number) {
+    try {
+      const permission = await this.databaseService.permissions.findUnique({
+        where: { id }
+      })
+      if (!permission) {
+        throw new Error(`Permission with ID ${id} not found`)
+      }
+      return permission
+    } catch (error) {
+      throw new Error(`Failed to get permission: ${error.message}`)
+    }
+  }
 }
