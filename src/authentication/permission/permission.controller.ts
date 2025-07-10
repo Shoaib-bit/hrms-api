@@ -6,8 +6,10 @@ import {
   Get,
   InternalServerErrorException,
   Patch,
-  Post
+  Post,
+  Query
 } from '@nestjs/common'
+import { ApiQuery } from '@nestjs/swagger'
 import { CreatePermissionDto } from '../dto'
 import { AuthenticationService } from './../authentication.service'
 
@@ -41,8 +43,23 @@ export class PermissionController {
   }
 
   @Get()
-  getPermissions() {
-    return 'This action returns all permissions'
+  @ApiQuery({ name: 'query', required: false, type: String })
+  async getPermissions(@Query('query') query?: string) {
+    try {
+      const permissions = await this.authenticationService.getPermissions(query)
+      return {
+        message: 'Permissions retrieved successfully',
+        data: permissions
+      }
+    } catch (error) {
+      if (error.message.includes('Failed to create permission')) {
+        throw new InternalServerErrorException(
+          'Unable to create permission. Please try again.'
+        )
+      }
+
+      throw new InternalServerErrorException('An unexpected error occurred')
+    }
   }
 
   @Delete(':id')

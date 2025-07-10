@@ -36,11 +36,16 @@ export class AuthenticationService {
     }
   }
 
-  async getPermissions() {
+  async getPermissions(query?: string) {
     try {
       const permissions = await this.databaseService.permissions.findMany({
         where: {
-          status: 'active'
+          ...(query && {
+            name: {
+              contains: query,
+              mode: 'insensitive'
+            }
+          })
         },
         orderBy: {
           createdAt: 'desc'
