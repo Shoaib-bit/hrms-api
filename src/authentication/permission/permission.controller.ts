@@ -1,6 +1,6 @@
 import {
+  BadRequestException,
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
@@ -28,16 +28,9 @@ export class PermissionController {
         data: permission
       }
     } catch (error) {
-      if (error.message.includes('already exists')) {
-        throw new ConflictException(error.message)
+      if (error.message) {
+        throw new BadRequestException(error.message)
       }
-
-      if (error.message.includes('Failed to create permission')) {
-        throw new InternalServerErrorException(
-          'Unable to create permission. Please try again.'
-        )
-      }
-
       throw new InternalServerErrorException('An unexpected error occurred')
     }
   }
@@ -52,12 +45,9 @@ export class PermissionController {
         data: permissions
       }
     } catch (error) {
-      if (error.message.includes('Failed to get permissions')) {
-        throw new InternalServerErrorException(
-          'Unable to get permissions. Please try again.'
-        )
+      if (error.message) {
+        throw new BadRequestException(error.message)
       }
-
       throw new InternalServerErrorException('An unexpected error occurred')
     }
   }
@@ -72,12 +62,9 @@ export class PermissionController {
         data: null
       }
     } catch (error) {
-      if (error.message.includes('Failed to delete permission')) {
-        throw new InternalServerErrorException(
-          'Unable to delete permission. Please try again.'
-        )
+      if (error.message) {
+        throw new BadRequestException(error.message)
       }
-
       throw new InternalServerErrorException('An unexpected error occurred')
     }
   }
@@ -91,12 +78,9 @@ export class PermissionController {
         data: permission
       }
     } catch (error) {
-      if (error.message.includes('Failed to get permission')) {
-        throw new InternalServerErrorException(
-          'Unable to get permission. Please try again.'
-        )
+      if (error.message) {
+        throw new BadRequestException(error.message)
       }
-
       throw new InternalServerErrorException('An unexpected error occurred')
     }
   }
