@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { AuthenticationModule } from './authentication'
 import { CommonModule } from './common'
-import { UserModule } from './user/user.module'
+import { UserModule } from './user'
 
 @Module({
   imports: [CommonModule, AuthenticationModule, UserModule],

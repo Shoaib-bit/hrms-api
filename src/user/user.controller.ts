@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Patch,
+  Post
+} from '@nestjs/common'
+import { CreateUserDto } from './dto'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -6,10 +16,18 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  async addUser() {
-    // Logic to add a user
-    return {
-      message: 'User added successfully'
+  async addUser(@Body() createUserDto: CreateUserDto) {
+    try {
+      const user = await this.userService.createUser(createUserDto)
+      return {
+        message: 'User created successfully',
+        data: user
+      }
+    } catch (error) {
+      if (error.message) {
+        throw new BadRequestException(error.message)
+      }
+      throw new InternalServerErrorException('An unexpected error occurred')
     }
   }
 
